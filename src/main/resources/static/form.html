@@ -8,7 +8,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="webjars/bootstrap/4.3.1/css/bootstrap.min.css" >
 
-    <title>index</title>
+    <title>Static UserForm</title>
   </head>
   <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -23,24 +23,30 @@
 	     	<li class="nav-item">
 	       		 <a class="nav-link" href=form.html">회원가입</a> 
 		    </li>
+		    <li class="nav-item">
+	       		 <a class="nav-link" href="list">회원목록</a> 
+		    </li>
 	     </ul>
 	   
 	  </div>
 	</nav>
     <div class="container">회원가입
-	    <form>
+	    <form action="/create" method="post">
 		  <div class="form-group">
 		    <label for="userId">사용자 아이디</label>
-		    <input type="text" class="form-control" id="userId" placeholder="Enter User ID">
+		    <input type="text" class="form-control" id="userId" name="uId" placeholder="Enter User ID">
 		  <div class="form-group">
 		    <label for="password">Password</label>
-		    <input type="password" class="form-control" id="password" placeholder="Password">
+		    <input type="password" class="form-control" id="password" name="uPw" placeholder="Password">
 		  </div>
 		  <div class="form-group">
 		    <label for="userName">이 름</label>
-		    <input type="text" class="form-control" id="userName" placeholder="Enter User Name">
+		    <input type="text" class="form-control" id="userName" name="uName" placeholder="Enter User Name">
 		  </div>
-		  
+		  <div class="form-group">
+		    <label for="userEmail">이 메 일</label>
+		    <input type="text" class="form-control" id="userEmail" name="uEmail" placeholder="Enter User e-mail">
+		  </div>
 		  <button type="submit" class="btn btn-primary">Submit</button>
 		</form>
 	</div>

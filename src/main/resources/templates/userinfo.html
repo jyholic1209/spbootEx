@@ -8,7 +8,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="webjars/bootstrap/4.3.1/css/bootstrap.min.css" >
 
-    <title>Static index</title>
+    <title>Member Info</title>
   </head>
   <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -30,7 +30,19 @@
 	   
 	  </div>
 	</nav>
-    <div class="container">인덱스 페이지</div>
+	<div class="container">
+    
+    <div class="card" style="width: 18rem;">
+    <h1 align="center"> <span class="badge badge-secondary">Member Info</span> </h1>
+	  <div class="card-body">
+	    <h5 class="card-title">{{user.uName}}</h5>
+	    <h6 class="card-subtitle mb-2 text-muted">{{user.uEmail}}</h6>
+	    <p class="card-text">{{user.uName}}님의 아이디는 {{user.uId}} 입니다.</p>
+	    <a href="#" class="card-link">정보 수정</a>
+	    <a href="#" class="card-link">회원 탈퇴</a>
+	  </div>
+	</div>
+	</div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
