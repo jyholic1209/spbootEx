@@ -1,7 +1,18 @@
 package com.jy.user;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class User {
 	
+	@Id
+	@GeneratedValue
+	private long id;
+	
+	@Column(nullable=false, length=20)
 	private String uId;
 	private String uPw;
 	private String uName;
