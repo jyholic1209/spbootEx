@@ -18,6 +18,10 @@ public class User {
 	private String uName;
 	private String uEmail;
 	
+	public long getId() {
+		return id;
+	}
+	
 	public String getuId() {
 		return uId;
 	}
@@ -42,10 +46,12 @@ public class User {
 	public void setuEmail(String uEmail) {
 		this.uEmail = uEmail;
 	}
+
 	@Override
 	public String toString() {
-		return "User [uId=" + uId + ", uPw=" + uPw + ", uName=" + uName + ", uEmail=" + uEmail + "]";
+		return "User [id=" + id + ", uId=" + uId + ", uPw=" + uPw + ", uName=" + uName + ", uEmail=" + uEmail + "]";
 	}
+	
 	
 	
 

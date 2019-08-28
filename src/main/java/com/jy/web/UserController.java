@@ -1,10 +1,13 @@
 package com.jy.web;
 
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -41,6 +44,14 @@ public class UserController {
 	public String form() {
 		
 		return "/user/form";
+	}
+		
+	@GetMapping("/form/{id}")
+	public String form(@PathVariable Long id, Model model) {
+		
+		// springboot 2.x findOne을 사용 못		
+		model.addAttribute("user", userRepository.findById(id).get());
+		return "/user/updateform";
 	}
 	
 	@GetMapping("/login")

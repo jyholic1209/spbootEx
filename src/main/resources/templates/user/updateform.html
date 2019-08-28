@@ -5,37 +5,42 @@
 </head>
 <body>
 {{>/include/navi}}
-
 <div class="container" id="main">
    <div class="col-md-6 col-md-offset-3">
       <div class="panel panel-default content-main">
-          <form name="question" method="post" action="/user/create">
+          <form name="question" method="post" action="/user/updateUser">
+          {{#user}}
               <div class="form-group">
-                  <label for="userId">사용자 아이디</label>
-                  <input class="form-control" id="userId" name="uId" placeholder="User ID">
+                  <label for="userId">사용자 아이디 </label>
+                  <input class="form-control" id="userId" name="uId" value="{{uId}}">
               </div>
               <div class="form-group">
                   <label for="password">비밀번호</label>
-                  <input type="password" class="form-control" id="password" name="uPw" placeholder="Password">
+                  <input type="password" class="form-control" id="password" name="uPw" value="">
               </div>
               <div class="form-group">
                   <label for="name">이름</label>
-                  <input class="form-control" id="name" name="uName" placeholder="Name">
+                  <input class="form-control" id="name" name="uName" value="{{uName}}">
               </div>
               <div class="form-group">
                   <label for="email">이메일</label>
-                  <input type="email" class="form-control" id="email" name="uEmail" placeholder="Email">
+                  <input type="email" class="form-control" id="email" name="uEmail" value="{{uEmail}}">
               </div>
-              <button type="submit" class="btn btn-success clearfix pull-right">회원가입</button>
+              <button type="submit" class="btn btn-success clearfix pull-right">회원정보수정</button>
               <div class="clearfix" />
+            {{/user}}  
           </form>
+     
         </div>
     </div>
 </div>
+
 
 <!-- script references -->
 <script src="../js/jquery-2.2.0.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
 <script src="../js/scripts.js"></script>
-	</body>
+
+
+</body>
 </html>
