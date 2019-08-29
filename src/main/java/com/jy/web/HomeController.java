@@ -12,8 +12,7 @@ public class HomeController {
 
 	@GetMapping("")
 	public String welCome(Model model) {
-		
-//		model.addAttribute("name", name);
+
 		return "index";
 	}
 }

@@ -3,6 +3,8 @@ package com.jy.web;
 
 import java.util.Optional;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -66,5 +68,27 @@ public class UserController {
 	public String login() {
 		
 		return "/user/login";
+	}
+	
+	@PostMapping("/loginReq")
+	public String loginReq(String userId, String password, HttpSession session) {
+		User user = userRepository.findByUId(userId);
+		if(user == null) {
+			System.out.println("login Err : user is not exist!!");
+			return "/user/login";
+		}
+		if(!password.equals(user.getuPw())){
+			System.out.println("login Err : user password is not correct");
+			return "/user/login";
+		}
+		session.setAttribute("user", user);
+		System.out.println(user.toString());
+		return "redirect:/";
+	}
+	
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		session.removeAttribute("user");
+		return "redirect:/";
 	}
 }
