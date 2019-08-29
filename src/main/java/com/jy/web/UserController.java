@@ -28,8 +28,6 @@ public class UserController {
 	public String create(User strUser, Model model) {
 		
 		model.addAttribute("user", strUser);
-	//	users.add(strUser);
-	//	System.out.println(strUser.toString());
 		
 		userRepository.save(strUser);
 		return "redirect:/user/list";
