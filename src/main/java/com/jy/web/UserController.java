@@ -1,8 +1,6 @@
 package com.jy.web;
 
 
-import java.util.Optional;
-
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +46,17 @@ public class UserController {
 	}
 		
 	@GetMapping("/form/{id}")
-	public String form(@PathVariable Long id, Model model) {
+	public String form(@PathVariable Long id, Model model, HttpSession session) {
+		System.out.println("/form/id " + session.toString());
+		User sessionUser = HttpSessionUtil.getUserFormSession(session);
+		if(sessionUser == null) {
+			System.out.println("session null");
+			return "redirect:/user/login";
+		}
+		
+		if(!id.equals(sessionUser.getId())) {
+			throw new IllegalStateException("자기 정보만 수정 가능합니다.");
+		}
 		
 		// springboot 2.x findOne을 사용 못		
 		model.addAttribute("user", userRepository.findById(id).get());
@@ -57,21 +65,36 @@ public class UserController {
 	
 //	@PostMapping("/{id}") 
 	@PutMapping("/{id}")
-	public String updateUser(@PathVariable Long id, User newUser ) {
+	public String updateUser(@PathVariable Long id, User updateUser, HttpSession session ) {
+		// session에서 로그인 상태를 확인함
+		System.out.println("putmapping " + session.toString());
+		User sessionUser = HttpSessionUtil.getUserFormSession(session);
+		if(sessionUser == null) {
+			return "redirect:/user/login";
+		}
+		
+		if(!id.equals(sessionUser.getId())) {
+			throw new IllegalStateException("자기 정보만 수정 가능합니다.");
+		}
+		
 		User user = userRepository.findById(id).get();
-		user.update(newUser);
+		user.update(updateUser);
 		userRepository.save(user);
 		return "redirect:/user/list";
 	}
 	
 	@GetMapping("/login")
-	public String login() {
-		
-		return "/user/login";
+	public String login(HttpSession session) {
+		System.out.println("login " + session.toString());
+		if(session.getAttribute(HttpSessionUtil.USER_SESSION_KEY) == null) {
+			return "/user/login";
+		} 
+		return "redirect:/";
 	}
 	
 	@PostMapping("/loginReq")
 	public String loginReq(String userId, String password, HttpSession session) {
+		System.out.println("loginReq " + session.toString());
 		User user = userRepository.findByUId(userId);
 		if(user == null) {
 			System.out.println("login Err : user is not exist!!");
@@ -81,14 +104,16 @@ public class UserController {
 			System.out.println("login Err : user password is not correct");
 			return "/user/login";
 		}
-		session.setAttribute("user", user);
-		System.out.println(user.toString());
+		session.setAttribute(HttpSessionUtil.USER_SESSION_KEY, user);
+		System.out.println("loginReq : " + user.toString());
 		return "redirect:/";
 	}
 	
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
-		session.removeAttribute("user");
+		System.out.println("logout " + session.toString());
+		session.removeAttribute(HttpSessionUtil.USER_SESSION_KEY);
+		System.out.println("logout");
 		return "redirect:/";
 	}
 }
