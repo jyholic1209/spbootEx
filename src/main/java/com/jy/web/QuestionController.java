@@ -27,18 +27,31 @@ public class QuestionController {
 	@Autowired
 	private QuestionRepository questionRepository;
 	
+	public boolean hasPermision(HttpSession session, Question question) {
+		if(!HttpSessionUtil.isLoginUser(session)) {
+			throw new IllegalStateException("로그인이 필요합니다");
+		}
+		
+		User loginUser = HttpSessionUtil.getUserFormSession(session);
+		if(!question.isSameWriter(loginUser)) {
+			throw new IllegalStateException("작성자가 쓴 글만 수정, 삭제가 가능합니다.");
+		}
+		return true;
+	}
 	
 	@GetMapping("/form")
-	public String form(HttpSession session) {
-		if(!HttpSessionUtil.isLoginUser(session)) {
+	public String form(HttpSession session, Model model) {
+		if(!HttpSessionUtil.isLoginUser(session)) {	
+			model.addAttribute("errorMsg", "먼저 로그인 해 주세요");
 			return "/user/login";
 		}
 		return "/qna/form";
 	}
 	
 	@PostMapping("create")
-	public String create(HttpSession session, String title, String contents) {
+	public String create(HttpSession session, String title, String contents, Model model) {
 		if(!HttpSessionUtil.isLoginUser(session)) {
+			model.addAttribute("errorMsg", "먼저 로그인 해 주세요");
 			return "/user/login";
 		}
 		
@@ -51,6 +64,7 @@ public class QuestionController {
 	@GetMapping("/{id}")
 	public String show(@PathVariable Long id, Model model, HttpSession session ) {
 		if(!HttpSessionUtil.isLoginUser(session)) {
+			model.addAttribute("errorMsg", "먼저 로그인 해 주세요");
 			return "/user/login";
 		}
 		
@@ -61,18 +75,17 @@ public class QuestionController {
 	
 	@GetMapping("/{id}/form")
 	public String update(@PathVariable Long id, Model model, HttpSession session) {
-		if(!HttpSessionUtil.isLoginUser(session)) {
+		try {
+			Question question = questionRepository.findById(id).get();
+			if(hasPermision(session, question)) {
+				model.addAttribute("question", question);
+			}
+			return "/qna/updateForm";				
+			
+		} catch (Exception e) {
+			model.addAttribute("errorMsg", e.getMessage());
 			return "/user/login";
 		}
-	
-		Question question = questionRepository.findById(id).get();
-		User loginUser = HttpSessionUtil.getUserFormSession(session);
-		if (!question.isSameWriter(loginUser)) {
-			return "/user/login";
-		}
-		model.addAttribute("question", question);
-		return "/qna/updateForm";
-		
 	}
 	
 	@PutMapping("/{id}")
