@@ -20,4 +20,6 @@ public class HttpSessionUtil {
 		}
 		return (User) session.getAttribute(USER_SESSION_KEY);
 	}
+
+
 }
