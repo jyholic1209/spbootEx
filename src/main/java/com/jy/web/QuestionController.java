@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.jy.user.Question;
 import com.jy.user.QuestionRepository;
+import com.jy.user.Result;
 import com.jy.user.User;
 
 
@@ -89,14 +90,21 @@ public class QuestionController {
 	}
 	
 	@PutMapping("/{id}")
-	public String updateQuestion(@PathVariable Long id, String title, String contents, HttpSession session) {
-		if(!HttpSessionUtil.isLoginUser(session)) {
-			return "/user/login";
-		}
-	
+	public String updateQuestion(@PathVariable Long id, String title, String contents, HttpSession session, Model model) {
+//		if(!HttpSessionUtil.isLoginUser(session)) {
+//			return "/user/login";
+//		}
+//	
+//		Question question = questionRepository.findById(id).get();
+//		User loginUser = HttpSessionUtil.getUserFormSession(session);
+//		if (!question.isSameWriter(loginUser)) {
+//			return "/user/login";
+//		}
+		
 		Question question = questionRepository.findById(id).get();
-		User loginUser = HttpSessionUtil.getUserFormSession(session);
-		if (!question.isSameWriter(loginUser)) {
+		Result result = vaild(session, question);
+		if(!result.isVaild()) {
+			model.addAttribute("errorMsg", result.getErrorMsg());
 			return "/user/login";
 		}
 		
@@ -106,15 +114,35 @@ public class QuestionController {
 		return String.format("redirect:/questions/%d", id);
 	}
 	
-	@DeleteMapping("/{id}")
-	public String delete(@PathVariable Long id, HttpSession session) {
+	private Result vaild(HttpSession session, Question question) {
 		if(!HttpSessionUtil.isLoginUser(session)) {
-			return "/user/login";
+			return Result.fail("로그인이 필요합니다.");
 		}
-	
-		Question question = questionRepository.findById(id).get();
+		
 		User loginUser = HttpSessionUtil.getUserFormSession(session);
-		if (!question.isSameWriter(loginUser)) {
+		if(!question.isSameWriter(loginUser)) {
+			return Result.fail("자신이 쓴 글만 수정, 삭제가 가능합니다.");
+		}
+		
+		return Result.ok();
+	}
+	
+	@DeleteMapping("/{id}")
+	public String delete(@PathVariable Long id, HttpSession session, Model model) {
+//		if(!HttpSessionUtil.isLoginUser(session)) {
+//			return "/user/login";
+//		}
+//	
+//		Question question = questionRepository.findById(id).get();
+//		User loginUser = HttpSessionUtil.getUserFormSession(session);
+//		if (!question.isSameWriter(loginUser)) {
+//			return "/user/login";
+//		}
+		
+		Question question = questionRepository.findById(id).get();
+		Result result = vaild(session, question);
+		if(!result.isVaild()) {
+			model.addAttribute("errorMsg", result.getErrorMsg());
 			return "/user/login";
 		}
 		questionRepository.deleteById(id);
